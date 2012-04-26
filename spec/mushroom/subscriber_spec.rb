@@ -96,6 +96,21 @@ describe Mushroom::Subscriber do
       Server.new.notify(:start, {:payload => {:id => 123}}, Thread.current[:now])
     end
 
+    it 'target points to the instance that triggered the event' do
+      $server = Server.new
+
+      class CustomHandler < Mushroom::Subscriber
+        events :start, :on => Server
+
+        def notify
+          target.should == $server
+        end
+      end
+
+      $server.notify(:start)
+    end
+
+
   end
 end
 

@@ -6,9 +6,18 @@ module Mushroom
 
     attr_reader :event
     delegate :payload, :name, :time, :transaction_id, :duration, :to => :event
-
+    
     def initialize(event)
       @event = event
+    end
+
+    # The endpoint for notifications
+    def notify
+      raise NotImplementedError
+    end
+
+    def target
+      payload[:target]
     end
 
     class << self
