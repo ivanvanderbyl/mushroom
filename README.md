@@ -24,6 +24,8 @@ Or install it yourself as:
 
 ## Usage
 
+**Simple example: Dispatch an event and receive it somewhere else**
+
 ```ruby
 
 # app/models/server.rb
@@ -33,23 +35,11 @@ class Server
   def run
     notify :start #=> Dispatches a 'server:start' event with the current server instance as the event target.
   end
-
-  # You can instrument methods inline.
-  # This will trigger the server:stop event when you call #stop
-  # and notify all subscribers to the stop event.
-  #
-  # The server:stop event #duration will be 1 second.
-  #
-  def stop
-    sleep 1
-  end
-  instrument :stop
 end
 
-# lib/my\_app/event\_handler.rb
+# lib/my_app/event_handler.rb
 class EventHandler < Muchroom::Subscriber
-  events :start, :stop, :on => Server
-  events :cleanup, :on => ServerCache
+  events :start, :on => Server
 
   def notify
     # Handle event here
@@ -61,6 +51,90 @@ end
 
 Server.new.run
 ```
+
+**Slightly more advanced example: Instrument a method running, and display its duration:**
+
+```ruby
+class Server
+  include Mushroom
+
+  def start
+    sleep 1
+  end
+  instrument :start
+end
+
+# lib/my_app/event_handler.rb
+class EventHandler < Muchroom::Subscriber
+  events :start, :on => Server
+
+  def notify
+    # Handle event here
+    puts name     #=> "server:start"
+    puts target   #=> <Server id:1 ...>
+    puts duration #=> 1000.0
+  end
+end
+
+Server.new.start
+```
+
+**Subscribing to multiple events:**
+
+```ruby
+# lib/my_app/event_handler.rb
+class EventHandler < Muchroom::Subscriber
+  events :start, :stop, :destroy, :on => Server
+end
+```
+
+**Subscribing events to multiple targets
+
+```ruby
+# lib/my_app/event_handler.rb
+class EventHandler < Muchroom::Subscriber
+  events :create, :destroy, :on => [Server, User, Account]
+end
+```
+
+** Passing extra parameters to the subscriber**
+
+```ruby
+class Server
+  include Mushroom
+
+  def start
+    notify :start, Time.now
+  end
+end
+
+# lib/my_app/event_handler.rb
+class EventHandler < Muchroom::Subscriber
+  events :start, :on => Server
+
+  def notify(started_at)
+    puts started_at #=> 2012-04-26 16:56:54 +1000
+  end
+end
+
+Server.new.start
+```
+
+Remember to declare all the arguments you expect to be received in `#notify` or you won't receive them all. You can also get the same
+arguments from the `#payload` method.
+
+## Subscriber API
+
+The following methods are available on your Subscriber subclass:
+
+```ruby
+# payload
+# name
+# time
+# transaction_id
+# duration
+```
+
 
 ## Contributing
 
