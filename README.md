@@ -88,7 +88,7 @@ class EventHandler < Muchroom::Subscriber
 end
 ```
 
-**Subscribing events to multiple targets
+**Subscribing events to multiple targets**
 
 ```ruby
 # lib/my_app/event_handler.rb
