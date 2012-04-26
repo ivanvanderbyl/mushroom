@@ -97,7 +97,7 @@ class EventHandler < Mushroom::Subscriber
 end
 ```
 
-** Passing extra parameters to the subscriber**
+**Passing extra parameters to the subscriber**
 
 ```ruby
 class Server
