@@ -2,7 +2,7 @@
 
 Mushroom is a super simple wrapper around ActiveSupport Instrumentation introduced in Rails 3.
 
-Muchroom allows any component of your application to trigger events which later get subscribed to by any
+Mushroom allows any component of your application to trigger events which later get subscribed to by any
 other component in your application.
 
 The returned event can be used to handle follow up behaviour, profile running code, and event dispatch requests to
@@ -38,7 +38,7 @@ class Server
 end
 
 # lib/my_app/event_handler.rb
-class EventHandler < Muchroom::Subscriber
+class EventHandler < Mushroom::Subscriber
   events :start, :on => Server
 
   def notify
@@ -65,7 +65,7 @@ class Server
 end
 
 # lib/my_app/event_handler.rb
-class EventHandler < Muchroom::Subscriber
+class EventHandler < Mushroom::Subscriber
   events :start, :on => Server
 
   def notify
@@ -83,7 +83,7 @@ Server.new.start
 
 ```ruby
 # lib/my_app/event_handler.rb
-class EventHandler < Muchroom::Subscriber
+class EventHandler < Mushroom::Subscriber
   events :start, :stop, :destroy, :on => Server
 end
 ```
@@ -92,7 +92,7 @@ end
 
 ```ruby
 # lib/my_app/event_handler.rb
-class EventHandler < Muchroom::Subscriber
+class EventHandler < Mushroom::Subscriber
   events :create, :destroy, :on => [Server, User, Account]
 end
 ```
@@ -109,7 +109,7 @@ class Server
 end
 
 # lib/my_app/event_handler.rb
-class EventHandler < Muchroom::Subscriber
+class EventHandler < Mushroom::Subscriber
   events :start, :on => Server
 
   def notify(started_at)
