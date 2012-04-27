@@ -110,6 +110,19 @@ describe Mushroom::Subscriber do
       $server.notify(:start)
     end
 
+    it 'name returns event name as string' do
+      $server = Server.new
+
+      class CustomHandler < Mushroom::Subscriber
+        events :start, :on => Server
+
+        def notify
+          name.should == 'server:start'
+        end
+      end
+
+      $server.notify(:start)
+    end
 
   end
 end
